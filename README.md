@@ -1,6 +1,6 @@
 [Llama] Rotate Thread add-on v1.2
-(c) Copyright 2016 Nigel Hardy. All Rights Reserved.
-
+Licensed under GNU GENERAL PUBLIC LICENSE Version 3
+                       
 [OUTLINE]
  - Locks an existing thread and starts a new thread in the same forum with just a few clicks. 
  - Adds posts in each thread linking to the other.
