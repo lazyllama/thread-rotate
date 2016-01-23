@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="llamaThreadRotate" title="[Llama] Thread Rotate" version_string="1.2" version_id="5" url="https://xenforo.com/community/resources/llama-thread-rotate.2965/" install_callback_class="" install_callback_method="" uninstall_callback_class="" uninstall_callback_method="">
+  <admin_navigation/>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates/>
+  <admin_template_modifications/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="load_class_controller" execute_order="15" callback_class="Llama_ThreadRotate_Listener_Listen" callback_method="loadClassController" active="1" hint="XenForo_ControllerPublic_Thread" description="Listens for XenForo_ControllerPublic_Thread class loading"/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups/>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="llama_rotate_new_thread_title" global_cache="1" version_id="1" version_string="0.2"><![CDATA[Title for new thread]]></phrase>
+    <phrase title="llama_rotate_thread" global_cache="1" version_id="1" version_string="0.2"><![CDATA[Rotate Thread]]></phrase>
+    <phrase title="llama_rotate_thread_explain" global_cache="1" version_id="1" version_string="0.2"><![CDATA[This will cause the current thread to be locked and a new one opened.]]></phrase>
+    <phrase title="llama_rt_new_rotated_thread_message" version_id="0" version_string="0.1"><![CDATA[This thread is a continuation of the thread "[url='{link}']{title}[/url]" originally posted by [url='{userLink}']{username}[/url].
+
+Please remember to watch this thread if you were watching the previous one.]]></phrase>
+    <phrase title="llama_rt_old_rotated_thread_message" version_id="0" version_string="0.1"><![CDATA[This thread is now closed. A new thread "[url='{link}']{title}[/url]" has been created.
+Please remember to watch the new thread if you were watching this one.]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates>
+    <template title="llama_thread_rotate" version_id="5" version_string="1.2"><![CDATA[<xen:title>{xen:phrase llama_rotate_thread}: {xen:helper threadPrefix, $thread, escaped}{$thread.title}</xen:title>
+<xen:h1>{xen:phrase llama_rotate_thread}: {xen:helper threadPrefix, $thread}{$thread.title}</xen:h1>
+
+<xen:navigation>
+	<xen:breadcrumb source="$nodeBreadCrumbs" />
+	<xen:breadcrumb href="{xen:link full:threads, $thread}">{xen:helper threadPrefix, $thread}{$thread.title}</xen:breadcrumb>
+</xen:navigation>
+
+<xen:container var="$searchBar.thread"><xen:include template="search_bar_thread_only" /></xen:container>
+<xen:container var="$searchBar.forum"><xen:include template="search_bar_forum_only" /></xen:container>
+
+<form action="{xen:link 'threads/rotate', $thread}" method="post" class="xenForm formOverlay">
+<div>{xen:phrase llama_rotate_thread_explain}</div>
+		<dl class="ctrlUnit">
+		<dt><label for="ctrl_reason">{xen:phrase llama_rotate_new_thread_title}:</label></dt>
+		<dd><input type="text" name="newTitle" id="ctrl_new_title" class="textCtrl" value="{$newTitleGuess}"/></dd>
+	</dl>
+
+	<dl class="ctrlUnit submitUnit">
+		<dt></dt>
+		<dd><input type="submit" value="{xen:phrase llama_rotate_thread}" class="button primary" /></dd>
+	</dl>
+
+	<input type="hidden" name="_xfConfirm" value="1" />
+	<input type="hidden" name="_xfToken" value="{$visitor.csrf_token_page}" />
+</form>]]></template>
+  </templates>
+  <public_template_modifications>
+    <modification template="thread_view" modification_key="threadViewRotate" description="Add Rotate Thread option to Thread Tools" execution_order="100" enabled="1" action="str_replace">
+      <find><![CDATA[<xen:if is="{$deletedPosts}">
+								<li><a href="{xen:link threads/show-posts, $thread, 'page={$page}'}" class="MessageLoader" data-messageSelector="#messageList .message.deleted.placeholder">{xen:phrase show_deleted_posts}</a></li>
+							</xen:if>]]></find>
+      <replace><![CDATA[$0
+                                                        <xen:if is="{$canLockUnlockThread} AND {$canEditThread}">
+                                                                <li><a href="{xen:link 'threads/rotate', $thread}" class="OverlayTrigger">{xen:phrase llama_rotate_thread}</a></li>
+                                                        </xen:if>]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
